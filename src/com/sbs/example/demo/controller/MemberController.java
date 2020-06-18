@@ -24,14 +24,21 @@ public class MemberController extends Controller {
 	}
 
 	private void actionJoin(Request reqeust) {
-
+		System.out.print("ID : ");
+		String loginId = Factory.getScanner().next().trim();
+		System.out.print("PW : ");
+		String loginPw = Factory.getScanner().next().trim();
+		System.out.print("name : ");
+		String name = Factory.getScanner().next().trim();
+		if(memberService.join(loginId, loginPw, name)<0) {
+			System.out.println("회원가입 실패 사유 : 이미 존재하는 ID");
+		}
 	}
 
 	private void actionWhoami(Request reqeust) {
 		Member loginedMember = Factory.getSession().getLoginedMember();
-
 		if (loginedMember == null) {
-			System.out.println("나그네");
+			System.out.println("로그인 후 이용 가능합니다.");
 		} else {
 			System.out.println(loginedMember.getName());
 		}
@@ -39,19 +46,24 @@ public class MemberController extends Controller {
 	}
 
 	private void actionLogin(Request reqeust) {
-		System.out.printf("로그인 아이디 : ");
-		String loginId = Factory.getScanner().nextLine().trim();
-
-		System.out.printf("로그인 비번 : ");
-		String loginPw = Factory.getScanner().nextLine().trim();
-
-		Member member = memberService.getMemberByLoginIdAndLoginPw(loginId, loginPw);
-
-		if (member == null) {
-			System.out.println("일치하는 회원이 없습니다.");
-		} else {
-			System.out.println(member.getName() + "님 환영합니다.");
-			Factory.getSession().setLoginedMember(member);
+		if(Factory.getSession().getLoginedMember()==null) {
+			System.out.printf("로그인 아이디 : ");
+			String loginId = Factory.getScanner().nextLine().trim();
+			
+			System.out.printf("로그인 비번 : ");
+			String loginPw = Factory.getScanner().nextLine().trim();
+			
+			Member member = memberService.getMemberByLoginIdAndLoginPw(loginId, loginPw);
+			
+			if (member == null) {
+				System.out.println("일치하는 회원이 없습니다.");
+			} else {
+				System.out.println(member.getName() + "님 환영합니다.");
+				Factory.getSession().setLoginedMember(member);
+			}
+		}
+		else {
+			System.out.println(Factory.getSession().getLoginedMember().getName()+"님은 현재 로그인 상태입니다.");
 		}
 	}
 
@@ -60,8 +72,11 @@ public class MemberController extends Controller {
 
 		if (loginedMember != null) {
 			Session session = Factory.getSession();
-			System.out.println("로그아웃 되었습니다.");
+			System.out.println(loginedMember.getName()+"님, 로그아웃 되었습니다.");
 			session.setLoginedMember(null);
+		}
+		else {
+			System.out.println("이미 로그아웃 상태입니다.");
 		}
 
 	}

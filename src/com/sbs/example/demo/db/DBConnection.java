@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sbs.example.demo.factory.Factory;
+
 public class DBConnection {
 	private Connection connection;
 	public static String DB_NAME;
@@ -161,7 +163,17 @@ public class DBConnection {
 
 		return id;
 	}
-
+	
+	public void detail(String sql) {
+		Map<String, Object> a = selectRow(sql);
+		System.out.println("번호 : "+a.get("id"));
+		System.out.println("생성날짜 : "+a.get("regDate"));
+		System.out.println("제목 : "+a.get("title"));
+		System.out.println("내용 : "+a.get("body"));
+		System.out.println("작성자(번호) : "+a.get("memberId"));
+		System.out.println("작성 게시판(번호) : "+a.get("boardId"));
+	}
+	
 	public void close() {
 		if (connection != null) {
 			try {

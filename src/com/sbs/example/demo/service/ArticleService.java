@@ -61,4 +61,12 @@ public class ArticleService {
 		articleDao.modify(modifyNum, newTitle, newBody);
 	}
 
+	public void delete(int deleteNum) {
+		articleDao.deleteArticle(deleteNum);
+	}
+
+	public void detailArticle(int detailId) {
+		articleDao.detailArticle(detailId);
+	}
+
 }

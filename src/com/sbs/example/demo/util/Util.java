@@ -83,11 +83,21 @@ public class Util {
 		}
 	}
 
-
 	public static void makeDir(String dirPath) {
 		File dir = new File(dirPath);
 		if (!dir.exists()) {
 			dir.mkdir();
+		}
+	}
+	
+	public static void deleteFile(String filePath) {
+		File f = new File(filePath);
+		if (f.isFile()) {
+			f.delete();
+			System.out.println("파일 삭제");
+		}
+		else {
+			System.out.println("파일 미존재");
 		}
 	}
 }

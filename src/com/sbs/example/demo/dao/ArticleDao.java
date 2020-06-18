@@ -1,4 +1,5 @@
 package com.sbs.example.demo.dao;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,11 @@ public class ArticleDao {
 
 		List<Article> articles = new ArrayList<>();
 		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
-		
-		for ( Map<String, Object> row : rows ) {
+
+		for (Map<String, Object> row : rows) {
 			articles.add(new Article(row));
 		}
-		
+
 		return articles;
 	}
 
@@ -47,11 +48,11 @@ public class ArticleDao {
 
 		List<Board> boards = new ArrayList<>();
 		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
-		
-		for ( Map<String, Object> row : rows ) {
+
+		for (Map<String, Object> row : rows) {
 			boards.add(new Board(row));
 		}
-		
+
 		return boards;
 	}
 
@@ -64,11 +65,11 @@ public class ArticleDao {
 		sb.append(String.format("AND `code` = '%s' ", code));
 
 		Map<String, Object> row = dbConnection.selectRow(sb.toString());
-		
-		if ( row.isEmpty() ) {
+
+		if (row.isEmpty()) {
 			return null;
 		}
-		
+
 		return new Board(row);
 	}
 
@@ -105,11 +106,11 @@ public class ArticleDao {
 		sb.append(String.format("AND `id` = '%d' ", id));
 
 		Map<String, Object> row = dbConnection.selectRow(sb.toString());
-		
-		if ( row.isEmpty() ) {
+
+		if (row.isEmpty()) {
 			return null;
 		}
-		
+
 		return new Board(row);
 	}
 
@@ -123,28 +124,74 @@ public class ArticleDao {
 
 		List<Article> articles = new ArrayList<>();
 		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
-		
-		for ( Map<String, Object> row : rows ) {
+
+		for (Map<String, Object> row : rows) {
 			articles.add(new Article(row));
 		}
-		
+
 		return articles;
 	}
 
-	public void modify(int modifyNum, String newTitle, String newBody) {
-		List<Article> articles = getArticles();
-		for(Article a : articles) {
-			if(a.getId()==modifyNum) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(String.format("UPDATE article "));
-				sb.append(String.format("SET title = '%s' ", newTitle));
-				sb.append(String.format(", `body` = '%s' ", newBody));
-				sb.append(String.format("where id = '%d' ", modifyNum));
+	public void modify(int modifyId, String newTitle, String newBody) {
+		Article a = getArticleById(modifyId);
+		if (a.getBoardId() == Factory.getSession().getCurrentBoard().getId()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(String.format("UPDATE article "));
+			sb.append(String.format("SET title = '%s' ", newTitle));
+			sb.append(String.format(", `body` = '%s' ", newBody));
+			sb.append(String.format("where id = '%d' ", modifyId));
 
-				dbConnection.update(sb.toString());
-				System.out.println(a.getId()+"번 게시물 변경이 완료되었습니다.");
-				break;
+			dbConnection.update(sb.toString());
+			System.out.println(a.getId() + "번 게시물 변경이 완료되었습니다.");
+		} else {
+			System.out.println("게시물 수정 실패 사유 : 현재 게시판의 게시물이 아님.");
+		}
+	}
+
+	public Article getArticleById(int id) {
+		List<Article> articles = getArticles();
+		for (Article a : articles) {
+			if (a.getId() == id) {
+				return a;
 			}
+		}
+		return null;
+	}
+
+	public boolean isArticleExists(int id) {
+		List<Article> articles = getArticles();
+		for (Article a : articles) {
+			if (a.getId() == id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void deleteArticle(int deleteNum) {
+		Article a = getArticleById(deleteNum);
+		if (a != null) {
+			if (a.getBoardId() == Factory.getSession().getCurrentBoard().getId()) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("DELETE FROM article WHERE id=" + deleteNum);
+				dbConnection.delete(sb.toString());
+				System.out.println(deleteNum + "번 게시물이 삭제되었습니다.");
+			} else {
+				System.out.println("게시물 삭제 실패 사유 : 현재 게시판의 게시물이 아님.");
+			}
+		} else {
+			System.out.println("게시물 삭제 실패 사유 : 존재하지 않은 게시물");
+		}
+	}
+
+	public void detailArticle(int detailId) {
+		if(isArticleExists(detailId)) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT * FROM article WHERE id="+detailId);
+			dbConnection.detail(sb.toString());
+		}
+		else {
+			System.out.println("게시물 상세보기 실패 사유 : 존재하지 않는 게시물");
 		}
 	}
 

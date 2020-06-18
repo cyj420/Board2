@@ -1,7 +1,10 @@
 package com.sbs.example.demo.dao;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.sbs.example.demo.db.DBConnection;
+import com.sbs.example.demo.dto.Article;
 import com.sbs.example.demo.dto.Member;
 import com.sbs.example.demo.factory.Factory;
 
@@ -60,7 +63,6 @@ public class MemberDao {
 		if ( row.isEmpty() ) {
 			return null;
 		}
-		
 		return new Member(row);
 	}
 
@@ -74,5 +76,22 @@ public class MemberDao {
 		sb.append(String.format(", `name` = '%s' ", member.getName()));
 
 		return dbConnection.insert(sb.toString());
+	}
+
+	public List<Member> getMembers() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(String.format("SELECT * "));
+		sb.append(String.format("FROM `member` "));
+		sb.append(String.format("WHERE 1 "));
+		sb.append(String.format("ORDER BY id DESC "));
+
+		List<Member> members = new ArrayList<>();
+		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
+
+		for (Map<String, Object> row : rows) {
+			members.add(new Member(row));
+		}
+		return members;
 	}
 }

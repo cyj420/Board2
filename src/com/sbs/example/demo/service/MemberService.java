@@ -1,5 +1,7 @@
 package com.sbs.example.demo.service;
 
+import java.util.List;
+
 import com.sbs.example.demo.dao.MemberDao;
 import com.sbs.example.demo.dto.Member;
 import com.sbs.example.demo.factory.Factory;
@@ -36,5 +38,9 @@ public class MemberService {
 		if (member == null) {
 			join("admin", "admin", "관리자");
 		}
+	}
+
+	public List<Member> getMembers(){
+		return memberDao.getMembers();
 	}
 }

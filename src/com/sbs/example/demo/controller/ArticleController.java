@@ -25,19 +25,46 @@ public class ArticleController extends Controller {
 			actionCurrentBoard();
 		} else if (request.getActionName().equals("modify")) {
 			actionModify(request);
+		} else if (request.getActionName().equals("delete")) {
+			actionDelete(request);
+		} else if (request.getActionName().equals("detail")) {
+			actionDetail(request);
+		}
+	}
+
+	private void actionDetail(Request request) {
+		try{
+			int detailId = Integer.parseInt(request.getArg1());
+			articleService.detailArticle(detailId);
+		}catch (Exception e) {
+			 System.out.println("게시물 상세보기 실패 사유 : 번호 미입력");
+		}
+	}
+
+	private void actionDelete(Request request) {
+		try{
+			int deleteId = Integer.parseInt(request.getArg1());
+			articleService.delete(deleteId);
+		}catch (Exception e) {
+			 System.out.println("게시물 삭제 실패 사유 : 번호 미입력");
 		}
 	}
 
 	private void actionModify(Request request) {
 		try{
-			int modifyNum = Integer.parseInt(request.getArg1());
-			System.out.print("새로운 제목 : ");
-			String newTitle = Factory.getScanner().nextLine().trim();
-			System.out.print("새로운 내용 : ");
-			String newBody = Factory.getScanner().nextLine().trim();
-			articleService.modify(modifyNum, newTitle, newBody);
+			int modifyId = Integer.parseInt(request.getArg1());
+			if(Factory.getArticleDao().isArticleExists(modifyId)) {
+				System.out.print("새로운 제목 : ");
+				String newTitle = Factory.getScanner().nextLine().trim();
+				System.out.print("새로운 내용 : ");
+				String newBody = Factory.getScanner().nextLine().trim();
+				articleService.modify(modifyId, newTitle, newBody);
+			}
+			else {
+				System.out.println("게시물 수정 실패 사유 : 존재하지 않는 게시물");
+			}
 		}catch (Exception e) {
-			System.out.println("게시물 수정 실패 사유 : 게시글 번호 입력 miss");
+			System.out.println("게시물 수정 실패 사유 : 번호 미입력");
 		}
 	}
 

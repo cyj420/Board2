@@ -29,8 +29,10 @@ public class App {
 
 		// DB 정보세팅
 		DBConnection.DB_NAME = "site8";
-		DBConnection.DB_USER = "sbsst";
-		DBConnection.DB_PASSWORD = "sbs123414";
+//		DBConnection.DB_USER = "sbsst";
+//		DBConnection.DB_PASSWORD = "sbs123414";
+		DBConnection.DB_USER = "root";
+		DBConnection.DB_PASSWORD = "";
 		DBConnection.DB_PORT = 3306;
 
 		Factory.getDBConnection().connect();

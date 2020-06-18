@@ -31,7 +31,7 @@ public class BuildService {
 
 			List<Article> articles = articleService.getArticlesByBoardCode(board.getCode());
 
-//			String template = Util.getFileContents("site_template/article/list.html");
+			String template = Util.getFileContents("site_template/article/list.html");
 
 			for (Article article : articles) {
 				html += "<tr>";
@@ -41,7 +41,7 @@ public class BuildService {
 				html += "</tr>";
 			}
 
-//			html = template.replace("${TR}", html);
+			html = template.replace("${TR}", html);
 
 			html = head + html + foot;
 
@@ -63,6 +63,10 @@ public class BuildService {
 
 			Util.writeFileContents("site/article/" + article.getId() + ".html", html);
 		}
+//		for(int i=0; i<articles.lastIndexOf(articles); i++) {
+//		System.out.println(articles.indexOf(articles));
+//			Util.deleteFile("site/article/" + i + ".html");
+//		}
 	}
 
 }
