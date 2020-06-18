@@ -171,8 +171,4 @@ public class DBConnection {
 			}
 		}
 	}
-
-	public void modify(String string) {
-		asdf
-	}
 }

@@ -141,7 +141,7 @@ public class ArticleDao {
 				sb.append(String.format(", `body` = '%s' ", newBody));
 				sb.append(String.format("where id = '%d' ", modifyNum));
 
-				dbConnection.modify(sb.toString());
+				dbConnection.update(sb.toString());
 				System.out.println(a.getId()+"번 게시물 변경이 완료되었습니다.");
 				break;
 			}
