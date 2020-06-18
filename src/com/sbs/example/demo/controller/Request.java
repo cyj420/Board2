@@ -1,6 +1,6 @@
-
+package com.sbs.example.demo.controller;
 // Request
-class Request {
+public class Request {
 	private String requestStr;
 	private String controllerName;
 	private String actionName;
@@ -8,11 +8,11 @@ class Request {
 	private String arg2;
 	private String arg3;
 
-	boolean isValidRequest() {
+	public boolean isValidRequest() {
 		return actionName != null;
 	}
 
-	Request(String requestStr) {
+	public Request(String requestStr) {
 		this.requestStr = requestStr;
 		String[] requestStrBits = requestStr.split(" ");
 		this.controllerName = requestStrBits[0];

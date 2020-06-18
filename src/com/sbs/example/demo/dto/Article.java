@@ -1,6 +1,7 @@
+package com.sbs.example.demo.dto;
 import java.util.Map;
 
-class Article extends Dto {
+public class Article extends Dto {
 	private int boardId;
 	private int memberId;
 	private String title;

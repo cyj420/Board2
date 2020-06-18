@@ -1,8 +1,13 @@
+package com.sbs.example.demo.service;
 
-class MemberService {
+import com.sbs.example.demo.dao.MemberDao;
+import com.sbs.example.demo.dto.Member;
+import com.sbs.example.demo.factory.Factory;
+
+public class MemberService {
 	private MemberDao memberDao;
 
-	MemberService() {
+	public MemberService() {
 		memberDao = Factory.getMemberDao();
 	}
 

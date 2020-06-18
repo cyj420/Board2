@@ -1,9 +1,14 @@
+package com.sbs.example.demo.dao;
 import java.util.Map;
 
-class MemberDao {
+import com.sbs.example.demo.db.DBConnection;
+import com.sbs.example.demo.dto.Member;
+import com.sbs.example.demo.factory.Factory;
+
+public class MemberDao {
 	DBConnection dbConnection;
 
-	MemberDao() {
+	public MemberDao() {
 		dbConnection = Factory.getDBConnection();
 	}
 

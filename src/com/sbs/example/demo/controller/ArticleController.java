@@ -1,25 +1,47 @@
+package com.sbs.example.demo.controller;
+
 import java.util.List;
 
-class ArticleController extends Controller {
+import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.Board;
+import com.sbs.example.demo.factory.Factory;
+import com.sbs.example.demo.service.ArticleService;
+
+public class ArticleController extends Controller {
 	private ArticleService articleService;
 
-	ArticleController() {
+	public ArticleController() {
 		articleService = Factory.getArticleService();
 	}
 
-	public void doAction(Request reqeust) {
-		if (reqeust.getActionName().equals("list")) {
-			actionList(reqeust);
-		} else if (reqeust.getActionName().equals("write")) {
-			actionWrite(reqeust);
-		} else if (reqeust.getActionName().equals("changeBoard")) {
-			actionChangeBoard(reqeust);
-		} else if (reqeust.getActionName().equals("currentBoard")) {
-			actionCurrentBoard(reqeust);
+	public void doAction(Request request) {
+		if (request.getActionName().equals("list")) {
+			actionList(request);
+		} else if (request.getActionName().equals("write")) {
+			actionWrite(request);
+		} else if (request.getActionName().equals("changeBoard")) {
+			actionChangeBoard(request);
+		} else if (request.getActionName().equals("currentBoard")) {
+			actionCurrentBoard();
+		} else if (request.getActionName().equals("modify")) {
+			actionModify(request);
 		}
 	}
 
-	private void actionCurrentBoard(Request reqeust) {
+	private void actionModify(Request request) {
+		try{
+			int modifyNum = Integer.parseInt(request.getArg1());
+			System.out.print("새로운 제목 : ");
+			String newTitle = Factory.getScanner().nextLine().trim();
+			System.out.print("새로운 내용 : ");
+			String newBody = Factory.getScanner().nextLine().trim();
+			articleService.modify(modifyNum, newTitle, newBody);
+		}catch (Exception e) {
+			System.out.println("게시물 수정 실패 사유 : 게시글 번호 입력 miss");
+		}
+	}
+
+	private void actionCurrentBoard() {
 		Board board = Factory.getSession().getCurrentBoard();
 		System.out.printf("현재 게시판 : %s\n", board.getName());
 	}

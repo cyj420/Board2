@@ -1,3 +1,5 @@
+package com.sbs.example.demo.util;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 // Util
-class Util {
+public class Util {
 	// 현재날짜문장
 	public static String getNowDateStr() {
 		Calendar cal = Calendar.getInstance();

@@ -1,10 +1,16 @@
+package com.sbs.example.demo.service;
 import java.util.List;
 
+import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.Board;
+import com.sbs.example.demo.factory.Factory;
+import com.sbs.example.demo.util.Util;
+
 // Service
-class BuildService {
+public class BuildService {
 	ArticleService articleService;
 
-	BuildService() {
+	public BuildService() {
 		articleService = Factory.getArticleService();
 	}
 
@@ -25,7 +31,7 @@ class BuildService {
 
 			List<Article> articles = articleService.getArticlesByBoardCode(board.getCode());
 
-			String template = Util.getFileContents("site_template/article/list.html");
+//			String template = Util.getFileContents("site_template/article/list.html");
 
 			for (Article article : articles) {
 				html += "<tr>";
@@ -35,7 +41,7 @@ class BuildService {
 				html += "</tr>";
 			}
 
-			html = template.replace("${TR}", html);
+//			html = template.replace("${TR}", html);
 
 			html = head + html + foot;
 

@@ -1,5 +1,6 @@
+package com.sbs.example.demo.dto;
 
-class ArticleReply extends Dto {
+public class ArticleReply extends Dto {
 	private int id;
 	private String regDate;
 	private int articleId;

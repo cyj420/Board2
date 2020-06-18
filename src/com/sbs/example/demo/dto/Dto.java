@@ -1,5 +1,9 @@
+package com.sbs.example.demo.dto;
+
+import com.sbs.example.demo.util.Util;
+
 // DTO
-abstract class Dto {
+public abstract class Dto {
 	private int id;
 	private String regDate;
 

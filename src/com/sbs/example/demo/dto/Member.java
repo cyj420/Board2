@@ -1,6 +1,7 @@
+package com.sbs.example.demo.dto;
 import java.util.Map;
 
-class Member extends Dto {
+public class Member extends Dto {
 	private String loginId;
 	private String loginPw;
 	private String name;

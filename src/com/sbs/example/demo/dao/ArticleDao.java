@@ -1,12 +1,18 @@
+package com.sbs.example.demo.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.sbs.example.demo.db.DBConnection;
+import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.Board;
+import com.sbs.example.demo.factory.Factory;
+
 // Dao
-class ArticleDao {
+public class ArticleDao {
 	DBConnection dbConnection;
 
-	ArticleDao() {
+	public ArticleDao() {
 		dbConnection = Factory.getDBConnection();
 	}
 
@@ -123,6 +129,23 @@ class ArticleDao {
 		}
 		
 		return articles;
+	}
+
+	public void modify(int modifyNum, String newTitle, String newBody) {
+		List<Article> articles = getArticles();
+		for(Article a : articles) {
+			if(a.getId()==modifyNum) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(String.format("UPDATE article "));
+				sb.append(String.format("SET title = '%s' ", newTitle));
+				sb.append(String.format(", `body` = '%s' ", newBody));
+				sb.append(String.format("where id = '%d' ", modifyNum));
+
+				dbConnection.modify(sb.toString());
+				System.out.println(a.getId()+"번 게시물 변경이 완료되었습니다.");
+				break;
+			}
+		}
 	}
 
 }

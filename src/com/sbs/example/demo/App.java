@@ -1,8 +1,17 @@
+package com.sbs.example.demo;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sbs.example.demo.controller.ArticleController;
+import com.sbs.example.demo.controller.BuildController;
+import com.sbs.example.demo.controller.Controller;
+import com.sbs.example.demo.controller.MemberController;
+import com.sbs.example.demo.controller.Request;
+import com.sbs.example.demo.db.DBConnection;
+import com.sbs.example.demo.factory.Factory;
+
 // App
-class App {
+public class App {
 	private Map<String, Controller> controllers;
 
 	// 컨트롤러 만들고 한곳에 정리

@@ -1,6 +1,15 @@
+package com.sbs.example.demo.factory;
 import java.util.Scanner;
 
-class Factory {
+import com.sbs.example.demo.controller.Session;
+import com.sbs.example.demo.dao.ArticleDao;
+import com.sbs.example.demo.dao.MemberDao;
+import com.sbs.example.demo.db.DBConnection;
+import com.sbs.example.demo.service.ArticleService;
+import com.sbs.example.demo.service.BuildService;
+import com.sbs.example.demo.service.MemberService;
+
+public class Factory {
 	private static Session session;
 	private static DBConnection dbConnection;
 	private static BuildService buildService;

@@ -1,12 +1,17 @@
+package com.sbs.example.demo.controller;
 
-class MemberController extends Controller {
+import com.sbs.example.demo.dto.Member;
+import com.sbs.example.demo.factory.Factory;
+import com.sbs.example.demo.service.MemberService;
+
+public class MemberController extends Controller {
 	private MemberService memberService;
 
-	MemberController() {
+	public MemberController() {
 		memberService = Factory.getMemberService();
 	}
 
-	void doAction(Request reqeust) {
+	public void doAction(Request reqeust) {
 		if (reqeust.getActionName().equals("logout")) {
 			actionLogout(reqeust);
 		} else if (reqeust.getActionName().equals("login")) {
