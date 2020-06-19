@@ -61,12 +61,20 @@ public class ArticleService {
 		articleDao.modify(modifyNum, newTitle, newBody);
 	}
 
-	public void delete(int deleteNum) {
-		articleDao.deleteArticle(deleteNum);
+	public void delete(Article deleteArticle) {
+		articleDao.deleteArticle(deleteArticle);
 	}
 
-	public void detailArticle(int detailId) {
-		articleDao.detailArticle(detailId);
+	public Article detailArticle(int detailId) {
+		return articleDao.detailArticle(detailId);
+	}
+
+	public void writeArticleReply(int articleId, String reply) {
+		articleDao.writeArticleReply(articleId, reply);
+	}
+
+	public void getArticleReplies(int detailId) {
+		articleDao.getArticleReplies(detailId);
 	}
 
 }

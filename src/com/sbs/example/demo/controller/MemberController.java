@@ -30,8 +30,12 @@ public class MemberController extends Controller {
 		String loginPw = Factory.getScanner().next().trim();
 		System.out.print("name : ");
 		String name = Factory.getScanner().next().trim();
+		//아래 코드를 적지 않으면 명령어: 메세지가 두번 뜸.
+		Factory.getScanner().nextLine();
 		if(memberService.join(loginId, loginPw, name)<0) {
 			System.out.println("회원가입 실패 사유 : 이미 존재하는 ID");
+		}else {
+			System.out.println("회원가입이 완료되었습니다.");
 		}
 	}
 

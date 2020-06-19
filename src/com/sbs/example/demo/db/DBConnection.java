@@ -1,4 +1,5 @@
 package com.sbs.example.demo.db;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,7 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.ArticleReply;
 import com.sbs.example.demo.factory.Factory;
+import com.sbs.example.demo.util.Util;
 
 public class DBConnection {
 	private Connection connection;
@@ -21,7 +25,10 @@ public class DBConnection {
 	public static int DB_PORT;
 
 	public void connect() {
-		String url = "jdbc:mysql://localhost:" + DB_PORT + "/" + DB_NAME + "?serverTimezone=UTC";
+		String url = "jdbc:mysql://localhost:" + DB_PORT + "/" + DB_NAME + "?serverTimezone=UTC&allowMultiQueries=true";
+		//한번에 2개 이상의 쿼리를 이용할 경우 allowMultiQueries=true <= 이게 필요!
+		//서치 키워드 : jdbc multiple query
+		//이용 사이트 : https://stackoverflow.com/questions/10797794/multiple-queries-executed-in-java-in-single-statement
 		String user = DB_USER;
 		String password = DB_PASSWORD;
 		String driverName = "com.mysql.cj.jdbc.Driver";
@@ -31,6 +38,49 @@ public class DBConnection {
 		} catch (SQLException e) {
 			System.err.printf("[SQL 예외] : %s\n", e.getMessage());
 		}
+
+		initDB();
+		//table 자동 생성
+	}
+
+	private void initDB() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(
+				"CREATE TABLE IF NOT EXISTS `member` (" + "    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,"
+						+ "    regDate DATETIME NOT NULL," + "    loginId CHAR(100) NOT NULL UNIQUE,"
+						+ "    loginPw CHAR(100) NOT NULL," + "    `name` CHAR(100) NOT NULL);");
+		sb.append("CREATE TABLE IF NOT EXISTS `board` ("
+				+ "    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," + "    regDate DATETIME NOT NULL,"
+				+ "    `code` CHAR(100) NOT NULL UNIQUE," + "    `name` CHAR(100) NOT NULL);");
+		
+		sb.append("CREATE TABLE IF NOT EXISTS `article` ("
+				+ "    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," + "    regDate DATETIME NOT NULL,"
+				+ "    title CHAR(100) NOT NULL," + "    `body` CHAR(100) NOT NULL,"
+				+ "    memberId INT(10) UNSIGNED NOT NULL," + "    boardId INT(10) UNSIGNED NOT NULL,"
+				+ "    INDEX boardId (`boardId`));");
+		sb.append("CREATE TABLE IF NOT EXISTS `articleReply` ("
+				+ "    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT," + "    regDate DATETIME NOT NULL,"
+				+ "    `body` CHAR(100) NOT NULL," + "    memberId INT(10) UNSIGNED NOT NULL,"
+				+ "    articleId INT(10) UNSIGNED NOT NULL," + "    INDEX articleId (`articleId`));");
+		// SQL을 적는 문서파일
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			statement.execute(sb.toString());
+		} catch (SQLException e) {
+			System.out.println(sb.toString());
+			System.err.printf("[CREATE TABLE 쿼리 오류]\n" + e.getStackTrace() + "\n");
+			e.printStackTrace();
+		}
+
+		try {
+			if (statement != null) {
+				statement.close();
+			}
+		} catch (SQLException e) {
+			System.err.println("[종료 오류]\n" + e.getStackTrace());
+		}
+
 	}
 
 	public int selectRowIntValue(String sql) {
@@ -163,17 +213,12 @@ public class DBConnection {
 
 		return id;
 	}
-	
-	public void detail(String sql) {
-		Map<String, Object> a = selectRow(sql);
-		System.out.println("번호 : "+a.get("id"));
-		System.out.println("생성날짜 : "+a.get("regDate"));
-		System.out.println("제목 : "+a.get("title"));
-		System.out.println("내용 : "+a.get("body"));
-		System.out.println("작성자(번호) : "+a.get("memberId"));
-		System.out.println("작성 게시판(번호) : "+a.get("boardId"));
+
+	public Article detail(String sql) {
+		Article article = new Article(selectRow(sql));
+		return article;
 	}
-	
+
 	public void close() {
 		if (connection != null) {
 			try {

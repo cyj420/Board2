@@ -134,18 +134,14 @@ public class ArticleDao {
 
 	public void modify(int modifyId, String newTitle, String newBody) {
 		Article a = getArticleById(modifyId);
-		if (a.getBoardId() == Factory.getSession().getCurrentBoard().getId()) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(String.format("UPDATE article "));
-			sb.append(String.format("SET title = '%s' ", newTitle));
-			sb.append(String.format(", `body` = '%s' ", newBody));
-			sb.append(String.format("where id = '%d' ", modifyId));
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("UPDATE article "));
+		sb.append(String.format("SET title = '%s' ", newTitle));
+		sb.append(String.format(", `body` = '%s' ", newBody));
+		sb.append(String.format("where id = '%d' ", modifyId));
 
-			dbConnection.update(sb.toString());
-			System.out.println(a.getId() + "번 게시물 변경이 완료되었습니다.");
-		} else {
-			System.out.println("게시물 수정 실패 사유 : 현재 게시판의 게시물이 아님.");
-		}
+		dbConnection.update(sb.toString());
+		System.out.println(a.getId() + "번 게시물 변경이 완료되었습니다.");
 	}
 
 	public Article getArticleById(int id) {
@@ -168,31 +164,30 @@ public class ArticleDao {
 		return false;
 	}
 
-	public void deleteArticle(int deleteNum) {
-		Article a = getArticleById(deleteNum);
-		if (a != null) {
-			if (a.getBoardId() == Factory.getSession().getCurrentBoard().getId()) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("DELETE FROM article WHERE id=" + deleteNum);
-				dbConnection.delete(sb.toString());
-				System.out.println(deleteNum + "번 게시물이 삭제되었습니다.");
-			} else {
-				System.out.println("게시물 삭제 실패 사유 : 현재 게시판의 게시물이 아님.");
-			}
-		} else {
-			System.out.println("게시물 삭제 실패 사유 : 존재하지 않은 게시물");
-		}
+	public void deleteArticle(Article deleteArticle) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("DELETE FROM article WHERE id=" + deleteArticle.getId());
+		dbConnection.delete(sb.toString());
 	}
 
-	public void detailArticle(int detailId) {
-		if(isArticleExists(detailId)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("SELECT * FROM article WHERE id="+detailId);
-			dbConnection.detail(sb.toString());
-		}
-		else {
-			System.out.println("게시물 상세보기 실패 사유 : 존재하지 않는 게시물");
-		}
+	public Article detailArticle(int detailId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT * FROM article WHERE id=" + detailId);
+		return dbConnection.detail(sb.toString());
+	}
+
+	public void writeArticleReply(int articleId, String reply) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("INSERT articleReply ");
+		sb.append("SET regDate=NOW(),");
+		sb.append(String.format("`body`='%s', ", reply));
+		sb.append(String.format("memberId='%d', ", Factory.getSession().getLoginedMember().getId()));
+		sb.append(String.format("articleId='%d'", articleId));
+		dbConnection.insert(sb.toString());
+	}
+
+	public void getArticleReplies(int detailId) {
+		
 	}
 
 }
