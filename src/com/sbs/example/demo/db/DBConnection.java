@@ -80,7 +80,6 @@ public class DBConnection {
 		} catch (SQLException e) {
 			System.err.println("[종료 오류]\n" + e.getStackTrace());
 		}
-
 	}
 
 	public int selectRowIntValue(String sql) {

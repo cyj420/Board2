@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.sbs.example.demo.db.DBConnection;
 import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.ArticleReply;
 import com.sbs.example.demo.dto.Board;
 import com.sbs.example.demo.factory.Factory;
 
@@ -186,8 +187,15 @@ public class ArticleDao {
 		dbConnection.insert(sb.toString());
 	}
 
-	public void getArticleReplies(int detailId) {
+	public List<ArticleReply> getArticleReplies(int articleId) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.format("SELECT * FROM articleReply WHERE articleId='%d' ORDER BY id DESC", articleId));
 		
+		List<ArticleReply> articleReplies = new ArrayList<>();
+		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
+		for(Map<String, Object> row : rows) {
+			articleReplies.add(new ArticleReply(row));
+		}
+		return articleReplies;
 	}
-
 }

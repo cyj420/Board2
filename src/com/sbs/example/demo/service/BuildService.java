@@ -2,6 +2,7 @@ package com.sbs.example.demo.service;
 import java.util.List;
 
 import com.sbs.example.demo.dto.Article;
+import com.sbs.example.demo.dto.ArticleReply;
 import com.sbs.example.demo.dto.Board;
 import com.sbs.example.demo.factory.Factory;
 import com.sbs.example.demo.util.Util;
@@ -34,10 +35,12 @@ public class BuildService {
 			String template = Util.getFileContents("site_template/article/list.html");
 
 			for (Article article : articles) {
+				MemberService ms = Factory.getMemberService();
 				html += "<tr>";
 				html += "<td>" + article.getId() + "</td>";
 				html += "<td>" + article.getRegDate() + "</td>";
 				html += "<td><a href=\"" + article.getId() + ".html\">" + article.getTitle() + "</a></td>";
+				html += "<td>" + ms.getMember(article.getMemberId()).getName() + "</td>";
 				html += "</tr>";
 			}
 
@@ -52,12 +55,28 @@ public class BuildService {
 		List<Article> articles = articleService.getArticles();
 
 		for (Article article : articles) {
+			List<ArticleReply> ar = articleService.getArticleReplies(article.getId());
 			String html = "";
 
 			html += "<div>제목 : " + article.getTitle() + "</div>";
 			html += "<div>내용 : " + article.getBody() + "</div>";
-			html += "<div><a href=\"" + (article.getId() - 1) + ".html\">이전글</a></div>";
-			html += "<div><a href=\"" + (article.getId() + 1) + ".html\">다음글</a></div>";
+			
+			//List는 null이 아닌 isEmpty()로 체크해야함
+			if(!ar.isEmpty()) {
+				html += "<div>댓글 ("+ar.size()+")</div>";
+				for(int i=0; i<ar.size(); i++) {
+					MemberService ms = Factory.getMemberService();
+					html += "<div>"+ms.getMember(ar.get(i).getMemberId()).getName()+" : "
+					+ar.get(i).getBody()+" - "+ar.get(i).getRegDate()+"</div>";
+				}
+			}
+			if(article.getId()!=articles.get(articles.size()-1).getId()) {
+				html += "<div><a href=\"" + (article.getId() - 1) + ".html\">이전글</a></div>";
+			}
+			
+			if(article.getId()!=articles.get(0).getId()) {
+				html += "<div><a href=\"" + (article.getId() + 1) + ".html\">다음글</a></div>";
+			}
 
 			html = head + html + foot;
 

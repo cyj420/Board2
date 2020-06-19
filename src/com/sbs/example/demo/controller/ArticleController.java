@@ -48,10 +48,14 @@ public class ArticleController extends Controller {
 					System.out.println("내용 : "+a.getBody());
 					System.out.println("작성자 : "+memberService.getMember(a.getMemberId()).getName());
 					System.out.println("작성게시판 : "+articleService.getBoard(a.getBoardId()).getName());
-					articleService.getArticleReplies(detailId);
-					System.out.println("댓글 ("+);
 					//여기서 댓글 노출 시키기
-					
+					System.out.printf("댓글 (%d)\n", articleService.getArticleReplies(detailId).size());
+					for(ArticleReply ar : articleService.getArticleReplies(detailId)) {
+						//댓글작성자 : 댓글내용 - 댓글작성날짜
+						System.out.printf("%s : %s - %s\n", 
+								memberService.getMember(ar.getMemberId()).getName(), 
+								ar.getBody(), ar.getRegDate());
+					}
 					//회원만 댓글 작성 가능
 					if(Factory.getSession().getLoginedMember()!=null) {
 						System.out.print("댓글을 다시겠습니까?(yes) : ");
